@@ -1,12 +1,6 @@
 calculation_to_units= 24
 name_of_unit="hours"
 
-
-
-
-
-
-
 def days_to_units(user_input_number):
     condition_check = user_input_number > 0
     print(type(condition_check))
