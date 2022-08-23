@@ -1,6 +1,3 @@
-from curses.ascii import isdigit
-
-
 calculation_to_units= 24
 name_of_unit="hours"
 
@@ -12,14 +9,13 @@ def days_to_units(num_of_days):
 def validate_and_execute():
      try:
        user_input_number = int(user_input)
-       if user_input.isdigit():
-         if user_input_number > 0:
-          my_result= days_to_units(user_input_number)
-          print (my_result)
-         elif user_input_number == 0:
-           print(f"Zero is not valid enter positive number")
-         else:
-          print("Input is not a number")
+       if user_input_number > 0:
+        my_result= days_to_units(user_input_number)
+        print (my_result)
+       elif user_input_number == 0:
+        print(f"Zero is not valid enter positive number")
+       else:
+        print("Input is not a number")
      except:
          print("Not Valid Enter the correct number")
 
