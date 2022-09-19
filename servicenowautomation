@@ -1,40 +1,85 @@
 import requests
-from sys import exit
 
 env = 'dev107980'
 user = 'admin'
-pwd = 'OE%w9riC=xV1'
+pwd = ''
 
 headers = {"Content-Type": "application/json", "Accept": "application/json"}
-print('Hi to ')
 
 
-def update():
-    print('printing')
-
-
-update()
-
-
-def createinc():
-    print("Hi")
+def createincident():
+    print("Creating INC")
     url = 'https://' + env + '.service-now.com/api/now/table/incident'
+
     response = requests.post(url, auth=(user, pwd), headers=headers,
                              data="{\"urgency\":\"1 - High\",\"assigned_to\":\"Josephine Sotlar\"}")
+
     if response.status_code != 200:
         print('Status:', response.status_code, 'Headers:', response.headers, 'Error Response:', response.json())
-        print('fja;fj')
-        print(response.json()['result'][0]['number'])
+        data = response.json()
+        print(data)
+        json_status = data['result']
+        print(json_status)
+        print("Incident " + json_status['number'] + " Created successfully")
         exit()
 
-    print('i am out')
-    #data = response.json()
-    #print(data)
-    #json_status = data['result']
-    #inc_number = data['result'][0]['number']
-    #print("Incident Number: " + inc_number)
-    exit()
+    # data = response.json()
+    # print(data)
+    # json_status = data['result']
+    # inc_number = data['number']
+    # print(inc_number)
+    # exit()
 
 
-def readinc():
-    
+def readincident():
+    inc_num = input("Enter the INC number")
+    url = 'https://' + env + '.service-now.com/api/now/table/incident?sysparm_query=number%3D' + inc_num + '&sysparm_limit=1'
+
+    response = requests.get(url, auth=(user, pwd), headers=headers)
+
+    if response.status_code != 200:
+        print('Status:', response.status_code, 'Headers:', response.headers, 'Error Response:', response.json())
+        exit()
+
+    data = response.json()
+    print(data)
+    json_status = data['result']
+    inc_num = data['result'][0]['number']
+    des = data['result'][0]['description']
+    print("Incident Number: " + inc_num)
+    print(des)
+
+
+def updateincident():  # adding worknote
+    sysid = input("Enter the sys id")
+    url = 'https://' + env + '.service-now.com/api/now/table/incident/' + sysid
+
+    response = requests.patch(url, auth=(user, pwd), headers=headers,
+                              data="{\"work_notes\":\"Worknote added by REST API\"}")
+
+    if response.status_code != 200:
+        print('Status:', response.status_code, 'Headers:', response.headers, 'Error Response:', response.json())
+        exit()
+
+    # Decode the JSON response into a dictionary and use the data
+    data = response.json()
+    print(data)
+
+
+def resolveinc():
+    sysid = input("Enter the sys id")
+    url = 'https://' + env + '.service-now.com/api/now/table/incident/' + sysid
+
+    response = requests.put(url, auth=(user, pwd), headers=headers,
+                            data="{\"state\":\"6\",\"close_code\":\"Solved (Work Around)\",\"close_notes\":\"Closing "
+                                 "the ticket using REST API Python\"}")
+
+    if response.status_code != 200:
+        print('Status:', response.status_code, 'Headers:', response.headers, 'Error Response:', response.json())
+        exit()
+
+    data = response.json()
+    print(data)
+
+
+readincident()
